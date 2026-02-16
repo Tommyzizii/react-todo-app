@@ -1,31 +1,34 @@
 pipeline {
-    agent {
-        docker {
-            // image 'node:lts-buster-slim'
-            image 'mrts/docker-python-nodejs-google-chrome'            
-            args '-p 3000:3000'
-        }
-    }
+    agent any
 
     environment {
-        CI = 'true'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        IMAGE_NAME = "thantzinmin/react-todo-app"
     }
 
     stages {
-        stage('Build') {
+
+        stage('Clone') {
             steps {
-                sh 'npm install'
+                checkout scm
             }
         }
-        stage('Test') {
+
+        stage('Build Docker Image') {
             steps {
-                // start the server
-                sh 'npm run test'
+                sh 'docker build -t $IMAGE_NAME:latest .'
             }
         }
-        stage('Deploy') {
+
+        stage('Login to DockerHub') {
             steps {
-                echo 'Deploying....'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                sh 'docker push $IMAGE_NAME:latest'
             }
         }
     }
