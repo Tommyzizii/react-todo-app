@@ -9,7 +9,11 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'PUPPETEER_SKIP_DOWNLOAD=true npm install'
+                sh '''
+                apt-get update
+                apt-get install -y python3 python-is-python3 build-essential
+                PUPPETEER_SKIP_DOWNLOAD=true npm install
+                '''
             }
         }
 
