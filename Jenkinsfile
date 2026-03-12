@@ -1,15 +1,16 @@
 pipeline {
 
-    agent {
-        docker {
-            image 'node:18'
-            args '-u root'
-        }
-    }
+    agent any
 
     stages {
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'node:18'
+                    args '-u root'
+                }
+            }
             steps {
                 sh '''
                 apt-get update
@@ -20,6 +21,12 @@ pipeline {
         }
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'node:18'
+                    args '-u root'
+                }
+            }
             steps {
                 sh 'npm test'
             }
@@ -42,5 +49,6 @@ pipeline {
                 echo "Deploying..."
             }
         }
+
     }
 }
