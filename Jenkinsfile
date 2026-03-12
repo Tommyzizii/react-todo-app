@@ -9,7 +9,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'npm install'
+                sh 'PUPPETEER_SKIP_DOWNLOAD=true npm install'
             }
         }
 
