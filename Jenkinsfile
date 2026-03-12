@@ -39,10 +39,21 @@ pipeline {
         }
 
         stage('Push') {
-            steps {
-                echo "Push image"
-            }
+    steps {
+        echo 'Logging into Docker Hub and pushing image...'
+
+        withCredentials([usernamePassword(
+            credentialsId: "${DOCKER_HUB_CREDS}",
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+
+            sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+
+            sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
         }
+    }
+}
 
         stage('Deploy') {
             steps {
