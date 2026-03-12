@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18-alpine'
+        }
+    }
 
     environment {
         CI = 'true'
@@ -27,7 +31,6 @@ pipeline {
 
         stage('Push') {
             steps {
-                echo 'Pushing Docker image...'
                 sh 'docker push tommyzizii/todo-app:latest'
             }
         }
