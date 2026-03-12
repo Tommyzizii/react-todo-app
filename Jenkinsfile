@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:18-alpine'
+            image 'node:18'
         }
     }
 
@@ -15,26 +15,27 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'npm run test'
+                sh 'npm test'
             }
         }
 
         stage('Containerize') {
             steps {
-                sh 'docker build -t tommyzizii/todo-app:latest .'
+                sh 'docker build -t todo-app .'
             }
         }
 
         stage('Push') {
             steps {
-                sh 'docker push tommyzizii/todo-app:latest'
+                echo "Push image"
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
+                echo "Deploying..."
             }
         }
+
     }
 }
